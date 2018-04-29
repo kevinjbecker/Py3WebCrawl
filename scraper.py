@@ -8,7 +8,7 @@ import requests
 # used to strain resulting HTML
 from bs4 import BeautifulSoup, SoupStrainer
 # used to determine if absolute URL
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 
 # WEB CRAWLER CLASS
@@ -46,7 +46,7 @@ class Crawler:
                     # if this anchor has an href (we don't care about JS triggers)
                     if link.has_attr('href'):
                         # creates a full URL if it isn't already absolute
-                        absolute_url = urljoin(self.u, link['href']) if not absolute(link['href']) else link['href']
+                        absolute_url = get_absolute_url(self.u, link['href'])
                         # if we haven't already visited this URL
                         if absolute_url not in self.visited:
                             # adds to the to_visit list
@@ -55,6 +55,16 @@ class Crawler:
                             self.visited[visitng].append(href_location)
             except:
                 self.errs_encountered += 1
+
+
+# determines if a url is absolute or relative
+def absolute(url):
+    return bool(urlparse(url).netloc)
+
+
+# returns the absolute url
+def get_absolute_url(base, dest):
+    return urljoin(base, dest) if not absolute(dest) else dest
 
 
 def main():
