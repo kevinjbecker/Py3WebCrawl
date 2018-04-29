@@ -34,7 +34,7 @@ class Crawler:
     def start(self):
         # set our location to the first in the list
         try:
-            while len(self.to_visit) > 0:
+            #while len(self.to_visit) > 0:
                 #print("visiting:", self.to_visit[0])
                 # grabs our first URL to visit and pops it
                 visiting = self.to_visit.pop(0)
@@ -46,19 +46,20 @@ class Crawler:
                 for anchor in BeautifulSoup(response.text, 'html.parser').find_all('a'):
                     # if this anchor has an href (we don't care about JS triggers)
                     if anchor.has_attr('href'):
-                        print(anchor['href'])
                         # creates a full URL if it isn't already absolute
                         absolute_url = get_absolute_url(self.u, anchor['href'])
                         # if we haven't already visited this URL
-                        if absolute_url not in self.visited:
+                        if not_visited(absolute_url):
                             # adds to the to_visit list
-                            self.to_visit = absolute_url
+                            self.to_visit.append(absolute_url)
                             # adds to our pointing list for the visiting URL
-                            self.visited[visitng].append(absolute_url)
-                            print("added:", absolute_url)
+                            self.visited[visiting].append(absolute_url)
         except:
             self.errs_encountered += 1
+        print(self.to_visit)
 
+    def not_visited(self, url):
+        return false
 
 # determines if a url is absolute or relative
 def absolute(url):
