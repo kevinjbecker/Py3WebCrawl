@@ -42,17 +42,17 @@ class Crawler:
                 self.visited[visiting] = []
 
                 # strains each URL using SoupStrainer
-                for link in BeautifulSoup(response.text, 'html.parser', parse_only=SoupStrainer('a')):
+                for anchor in BeautifulSoup(response.text, 'html.parser', parse_only=SoupStrainer('a')):
                     # if this anchor has an href (we don't care about JS triggers)
-                    if link.has_attr('href'):
+                    if anchor.has_attr('href'):
                         # creates a full URL if it isn't already absolute
-                        absolute_url = get_absolute_url(self.u, link['href'])
+                        absolute_url = get_absolute_url(self.u, anchor['href'])
                         # if we haven't already visited this URL
                         if absolute_url not in self.visited:
                             # adds to the to_visit list
-                            self.to_visit = self.to_visit + href_location
+                            self.to_visit = absolute_url
                             # adds to our pointing list for the visiting URL
-                            self.visited[visitng].append(href_location)
+                            self.visited[visitng].append(absolute_url)
             except:
                 self.errs_encountered += 1
 
